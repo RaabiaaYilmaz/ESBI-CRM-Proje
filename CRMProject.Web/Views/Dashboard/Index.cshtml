@@ -1,0 +1,138 @@
+﻿@model CRMProject.Web.Models.DashboardViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Ana Panel";
+}
+
+<h4 class="mb-4 fw-bold">Ana Panel</h4>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-3 bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                    <i class="fa-solid fa-users fa-lg"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Toplam Cari</div>
+                    <div class="fs-4 fw-bold">@Model.ToplamCari</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-3 bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                    <i class="fa-solid fa-boxes-stacked fa-lg"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Toplam Malzeme</div>
+                    <div class="fs-4 fw-bold">@Model.ToplamMalzeme</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-3 bg-danger bg-opacity-10 text-danger d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                    <i class="fa-solid fa-triangle-exclamation fa-lg"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Kritik Stok Uyarısı</div>
+                    <div class="fs-4 fw-bold">@Model.KritikStoklar.Count</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="rounded-3 bg-info bg-opacity-10 text-info d-flex align-items-center justify-content-center" style="width:48px;height:48px;">
+                    <i class="fa-solid fa-clock-rotate-left fa-lg"></i>
+                </div>
+                <div>
+                    <div class="text-muted small">Son Eklenenler</div>
+                    <div class="fs-4 fw-bold">@Model.SonCariler.Count</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white fw-semibold">
+                <i class="fa-solid fa-triangle-exclamation text-danger me-2"></i>Kritik Stoktaki Malzemeler
+            </div>
+            <div class="card-body p-0">
+                @if (!Model.KritikStoklar.Any())
+                {
+                    <p class="text-muted p-3 mb-0">Kritik stok seviyesinde malzeme bulunmuyor.</p>
+                }
+                else
+                {
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Malzeme</th>
+                                <th class="text-end">Stok</th>
+                                <th class="text-end">Kritik Seviye</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model.KritikStoklar)
+                            {
+                                <tr>
+                                    <td>@m.MalzemeAdi</td>
+                                    <td class="text-end text-danger fw-semibold">@m.StokMiktari</td>
+                                    <td class="text-end text-muted">@m.KritikStok</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-header bg-white fw-semibold">
+                <i class="fa-solid fa-clock-rotate-left text-info me-2"></i>Son Eklenen Cariler
+            </div>
+            <div class="card-body p-0">
+                @if (!Model.SonCariler.Any())
+                {
+                    <p class="text-muted p-3 mb-0">Henüz cari kaydı eklenmemiş.</p>
+                }
+                else
+                {
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Ünvan</th>
+                                <th>Tip</th>
+                                <th>Tarih</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model.SonCariler)
+                            {
+                                <tr>
+                                    <td>@c.Unvan</td>
+                                    <td><span class="badge bg-secondary">@c.CariTipi</span></td>
+                                    <td class="text-muted">@c.OlusturmaTarihi.ToString("dd.MM.yyyy")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>

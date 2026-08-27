@@ -1,0 +1,133 @@
+﻿@model CRMProject.Web.Models.AccountViewModels.GirisViewModel
+@{
+    // Login sayfası kendi layout'unu kullanır, ana admin layout'unu değil
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giriş Yap - ESBİ-CRM</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1e3a5f 0%, #0f2540 100%);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: #16324f;
+            color: #fff;
+            text-align: center;
+            padding: 32px 24px 24px;
+        }
+
+            .login-header i {
+                font-size: 2.5rem;
+                margin-bottom: 8px;
+            }
+
+            .login-header h4 {
+                margin: 0;
+                font-weight: 600;
+            }
+
+            .login-header small {
+                opacity: 0.7;
+            }
+
+        .login-body {
+            padding: 32px;
+        }
+
+        .form-floating > label {
+            color: #6c757d;
+        }
+
+        .btn-login {
+            background: #16324f;
+            border: none;
+            padding: 10px;
+            font-weight: 600;
+            width: 100%;
+        }
+
+            .btn-login:hover {
+                background: #0f2540;
+            }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <div class="login-header">
+            <i class="fa-solid fa-building-shield"></i>
+            <h4>ESBİ-CRM</h4>
+            <small>Yönetim Paneline Giriş</small>
+        </div>
+        <div class="login-body">
+            <form asp-controller="Account" asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small" role="alert"></div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Eposta" class="form-control" placeholder="E-posta" autofocus />
+                    <label asp-for="Eposta"></label>
+                    <span asp-validation-for="Eposta" class="text-danger small"></span>
+                </div>
+
+                <div class="form-floating mb-3 position-relative">
+                    <input asp-for="Sifre" id="sifreInput" class="form-control" placeholder="Şifre" style="padding-right: 40px;" />
+                    <label asp-for="Sifre"></label>
+                    <span asp-validation-for="Sifre" class="text-danger small"></span>
+                    <button type="button" id="sifreGosterBtn" class="btn btn-sm position-absolute top-0 end-0 mt-2 me-1 text-secondary" style="z-index: 5;">
+                        <i class="fa-solid fa-eye" id="sifreGosterIcon"></i>
+                    </button>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="BeniHatirla" class="form-check-input" />
+                    <label asp-for="BeniHatirla" class="form-check-label small"></label>
+                </div>
+
+                <button type="submit" class="btn btn-login btn-primary text-white rounded-2">
+                    Giriş Yap
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        // Şifre göster/gizle butonu
+        document.getElementById('sifreGosterBtn').addEventListener('click', function () {
+            const input = document.getElementById('sifreInput');
+            const icon = document.getElementById('sifreGosterIcon');
+            const gizli = input.type === 'password';
+
+            input.type = gizli ? 'text' : 'password';
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+    </script>
+</body>
+</html>

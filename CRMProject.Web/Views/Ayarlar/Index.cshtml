@@ -1,0 +1,67 @@
+﻿@model CRMProject.Web.Models.AyarlarViewModels.SifreDegistirViewModel
+@{
+    ViewData["Title"] = "Sistem Ayarları";
+}
+
+<h4 class="fw-bold mb-4">Sistem Ayarları</h4>
+
+<div class="card border-0 shadow-sm" style="max-width: 500px;">
+    <div class="card-header bg-white fw-semibold">
+        <i class="fa-solid fa-key me-2"></i>Şifre Değiştir
+    </div>
+    <div class="card-body">
+        <form asp-action="Index" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small"></div>
+
+            <div class="mb-3 position-relative">
+                <label asp-for="MevcutSifre" class="form-label"></label>
+                <input asp-for="MevcutSifre" id="mevcutSifreInput" class="form-control" style="padding-right: 40px;" />
+                <button type="button" class="btn btn-sm position-absolute end-0 text-secondary sifre-goster-btn" data-target="mevcutSifreInput" style="top: 32px; z-index: 5;">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
+                <span asp-validation-for="MevcutSifre" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <label asp-for="YeniSifre" class="form-label"></label>
+                <input asp-for="YeniSifre" id="yeniSifreInput" class="form-control" style="padding-right: 40px;" />
+                <button type="button" class="btn btn-sm position-absolute end-0 text-secondary sifre-goster-btn" data-target="yeniSifreInput" style="top: 32px; z-index: 5;">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
+                <span asp-validation-for="YeniSifre" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3 position-relative">
+                <label asp-for="YeniSifreTekrar" class="form-label"></label>
+                <input asp-for="YeniSifreTekrar" id="yeniSifreTekrarInput" class="form-control" style="padding-right: 40px;" />
+                <button type="button" class="btn btn-sm position-absolute end-0 text-secondary sifre-goster-btn" data-target="yeniSifreTekrarInput" style="top: 32px; z-index: 5;">
+                    <i class="fa-solid fa-eye"></i>
+                </button>
+                <span asp-validation-for="YeniSifreTekrar" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                <i class="fa-solid fa-check me-1"></i> Şifreyi Güncelle
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Üç şifre alanı için ortak göster/gizle işlevi
+        document.querySelectorAll('.sifre-goster-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const input = document.getElementById(btn.dataset.target);
+                const icon = btn.querySelector('i');
+                const gizli = input.type === 'password';
+
+                input.type = gizli ? 'text' : 'password';
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
+            });
+        });
+    </script>
+}

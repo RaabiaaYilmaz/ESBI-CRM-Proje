@@ -1,0 +1,201 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using CRMProject.Data.Entities
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ESBİ-CRM</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        :root {
+            --sidebar-bg: #16324f;
+            --sidebar-active: #1e4a76;
+            --accent: #2b7de9;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f4f6f9;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            color: #cfd8e3;
+            display: flex;
+            flex-direction: column;
+            z-index: 1030;
+        }
+
+        .sidebar-brand {
+            padding: 20px 16px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 12px 0;
+            overflow-y: auto;
+        }
+
+            .sidebar-nav a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 11px 20px;
+                color: #cfd8e3;
+                text-decoration: none;
+                font-size: 0.92rem;
+                transition: background 0.15s;
+            }
+
+                .sidebar-nav a:hover {
+                    background: rgba(255,255,255,0.06);
+                    color: #fff;
+                }
+
+                .sidebar-nav a.active {
+                    background: var(--sidebar-active);
+                    color: #fff;
+                    border-left: 3px solid var(--accent);
+                }
+
+                .sidebar-nav a i {
+                    width: 18px;
+                    text-align: center;
+                }
+
+        /* Main area */
+        .main-wrapper {
+            margin-left: 240px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid #e3e6ea;
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-area {
+            padding: 24px;
+            flex: 1;
+        }
+
+        .footer-area {
+            padding: 14px 24px;
+            font-size: 0.82rem;
+            color: #8a94a3;
+            border-top: 1px solid #e3e6ea;
+            background: #fff;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .user-badge .role-pill {
+                font-size: 0.72rem;
+                background: #eaf1fd;
+                color: var(--accent);
+                padding: 2px 8px;
+                border-radius: 20px;
+                font-weight: 600;
+            }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fa-solid fa-building-shield"></i>
+            <span>ESBİ-CRM</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a asp-controller="Dashboard" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")">
+                <i class="fa-solid fa-house"></i> Ana Panel
+            </a>
+            <a asp-controller="Cari" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Cari" ? "active" : "")">
+                <i class="fa-solid fa-users"></i> Cari Yönetimi
+            </a>
+            <a asp-controller="Malzeme" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Malzeme" ? "active" : "")">
+                <i class="fa-solid fa-boxes-stacked"></i> Malzeme Yönetimi
+            </a>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-controller="Kullanici" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Kullanici" ? "active" : "")">
+                    <i class="fa-solid fa-user-gear"></i> Kullanıcı Yönetimi
+                </a>
+            }
+            <a asp-controller="Ayarlar" asp-action="Index" class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Ayarlar" ? "active" : "")">
+                <i class="fa-solid fa-gears"></i> Sistem Ayarları
+            </a>
+        </nav>
+    </aside>
+
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div></div>
+            <div class="user-badge">
+                <span class="role-pill">@(User.IsInRole("Admin") ? "Admin" : "Kullanıcı")</span>
+                <span class="small text-muted">@User.Identity?.Name</span>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="mb-0">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-sm btn-outline-secondary">
+                        <i class="fa-solid fa-right-from-bracket"></i> Çıkış
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        <main class="content-area">
+            @if (TempData["Basari"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["Basari"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Hata"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="fas fa-exclamation-circle me-2"></i>@TempData["Hata"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @RenderBody()   
+        </main>
+
+        <footer class="footer-area">
+            &copy; @DateTime.Now.Year ESBİ-CRM — Tüm hakları saklıdır.
+        </footer>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
