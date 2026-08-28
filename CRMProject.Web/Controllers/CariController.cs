@@ -109,7 +109,7 @@ namespace CRMProject.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // Silme işlemi yalnızca Admin rolüne açık — dokümandaki güvenlik kuralı
+        // Silme işlemi yalnızca Admin rolüne açık 
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
