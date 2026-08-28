@@ -72,7 +72,7 @@ Uygulama ilk çalıştığında roller ve varsayılan admin hesabı otomatik ola
 | E-posta | admin@esbi.com.tr |
 | Şifre | Admin@123! |
 
-> Güvenlik notu: Üretim ortamına taşımadan önce varsayılan admin şifresini değiştirin.
+
 
 ## Proje Yapısı
 
